@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+using namespace std;
+vector<vector<pair<int,int>>> adj(100);
+vector<int> visited(100);
+int node,edge,node1,node2,weight;
+priority_queue<pair<int,pair<int,int>>> pq;
+int process(int vtx)
+{
+    visited[vtx]=1;
+    for(int i=0;i<adj[vtx].size();i++)
+    {
+        pair<int,int> v=adj[vtx][i];
+        if(!visited[v.first])
+        {
+            pq.push(make_pair(-v.second,make_pair(-v.first,-vtx)));
+        }
+    }
+    return 0;
+}
+int main()
+{
+    cin>>node>>edge;
+    for(int i=0;i<edge;i++)
+    {
+        cin>>node1>>node2>>weight;
+        adj[node1].push_back(make_pair(node2,weight));
+        adj[node2].push_back(make_pair(node1,weight));
+    }
+    visited.assign(100,0);
+    int source;
+    cout<<"enter source: ";
+    cin>>source;
+    process(source);
+    int mst_cost=0;
+    while(!pq.empty())
+    {
+        pair<int,pair<int,int>> frnt=pq.top();
+        pq.pop();
+        int u,v,w;
+        v=-frnt.second.first,w=-frnt.first,u=-frnt.second.second;
+        if(!visited[v])
+        {
+            mst_cost+=w;
+            cout<<u<<"->"<<v<<"("<<w<<")";
+            cout<<endl;
+            process(v);
+        }
+    }
+    cout<<"Minimum Cost: "<<mst_cost<<endl;
+    return 0;
+}
+    

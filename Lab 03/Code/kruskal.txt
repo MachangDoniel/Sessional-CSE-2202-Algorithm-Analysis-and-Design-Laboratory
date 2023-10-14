@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+using namespace std;
+vector<int> vec(100,0);
+int find_set(int x)
+{
+    if(vec[x]==x)
+        return x;
+    else
+        return find_set(vec[x]);
+}
+int unite(int x,int y)
+{
+    int fx=find_set(x);
+    int fy=find_set(y);
+    vec[fy]=fx;
+    return 0;
+}
+int main()
+{
+    int node,edge,node1,node2,weight;
+    cin>>node>>edge;
+    for(int i=0;i<node;i++)
+    {
+        int n;
+        cin>>n;
+        vec[n]=n;
+    }
+    vector<pair<int,pair<int,int>>> edges;
+    for(int i=0;i<edge;i++)
+    {
+        cin>>node1>>node2>>weight;
+        edges.push_back(make_pair(weight,make_pair(node1,node2)));
+    }
+    sort(edges.begin(),edges.end());
+    int mst_edges=0,edge_count=0,mst_weight=0;
+    while(mst_edges<(node-1)||edge_count<edge)
+    {
+        node1=edges[edge_count].second.first;
+        node2=edges[edge_count].second.second;
+        weight=edges[edge_count].first;
+        if(find_set(node1)!=find_set(node2))
+        {
+            mst_weight+=weight;
+            cout<<node1<<" "<<node2<<" "<<weight<<endl;
+            unite(node1,node2);
+            mst_edges++;
+        }
+        edge_count++;
+    }
+    cout<<"Minimum Cost: "<<mst_weight<<endl;
+    return 0;
+}
